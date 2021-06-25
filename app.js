@@ -3,7 +3,8 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const app = express();
 
-const apiRoutes = require("./src/modules/routes/routes");
+const apiLoginRoutes = require("./src/modules/routes/routesLogin");
+const apiDomRoutes = require("./src/modules/routes/routesDom");
 
 app.use(cors());
 
@@ -11,7 +12,8 @@ const url = "mongodb+srv://user:user1234@cluster0.1054y.mongodb.net/myFirstDatab
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.use(express.json());
-app.use('/', apiRoutes);
+app.use('/', apiLoginRoutes);
+app.use('/', apiDomRoutes);
 
 app.listen(5000, () => {
     console.log("Example app listening on port 5000!");
