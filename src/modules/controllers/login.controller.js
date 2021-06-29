@@ -6,11 +6,12 @@ const errorHandler = require('../../utils/errorHandler');
 
 module.exports.login = async (req, res) => {
     const { email } = req.body;
-    const client = await User.findOne({ email }, req.body);
+    const client = await User.findOne({ email });
 
     if (client) {
         //Проверка пароля
         const passwordResult = bcrypt.compareSync(req.body.password, client.password);
+
         if (passwordResult) {
             //Пароли совпали
             const token = jwt.sign({
@@ -24,7 +25,7 @@ module.exports.login = async (req, res) => {
         } else {
             //Пароли не совпали
             res.status(401).json({
-                message: 'Пароли не сопадают'
+                message: 'Пароли не совпадают'
             })
         }
     } else {
@@ -55,16 +56,14 @@ module.exports.register = async (req, res) => {
 
         try {
             await user.save().then(result => {
-                User.find({ email }, req.body).then(result => {
-                    const token = jwt.sign({
-                        email: req.body.email,
-                        userId: result._id
-                    }, keys.jwt, { expiresIn: 60 * 60 })
+                const token = jwt.sign({
+                    email: req.body.email,
+                    userId: result._id
+                }, keys.jwt, { expiresIn: 60 * 60 })
 
-                    res.status(201).json({
-                        email: req.body.email,
-                        token: `Bearer ${token}`
-                    })
+                res.status(201).json({
+                    email: req.body.email,
+                    token: `Bearer ${token}`
                 })
             })
         } catch (e) {

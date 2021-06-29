@@ -1,35 +1,36 @@
 const Task = require("../../db/models/task/indexDom");
 
 module.exports.getAllTasks = (req, res) => {
-    Task.find().then((result) => {
-        console.log({ data: result });
-        res.send({ data: result });
-    });
-};
+    try {
+        Task.find({
+            userId: req.user.userId
+        }).then((result) => {
+            res.send({ data: result });
+        });
+    } catch (error) {
+        res.status(401).json({
+            message: 'error'
+        })
+    };
+}
 
 module.exports.createNewTask = (req, res) => {
     const { name, doctor, date, lament } = req.body;
 
-    if (name &&
-        doctor &&
-        date &&
-        lament) {
-        try {
-            const task = new Task(req.body);
-            task.save().then((result) => {
+    try {
+        const task = new Task(req.body);
+        task.userId = req.user.userId;
+        task.save().then((result) => {
+            Task.find({
+                userId: req.user.userId
+            }).then(result => {
                 res.send({ data: result });
-            });
-
-        } catch (error) {
-            res.status(401).json({
-                message: 'Не все заполнены поля'
             })
-        }
+        });
 
-    } else {
-        res.status(409).json({
-            message: 'BlaBla'
-
+    } catch (error) {
+        res.status(401).json({
+            message: 'Не все заполнены поля'
         })
     }
 };

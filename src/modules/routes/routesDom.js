@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const verificationUser = require('../../middleware/verification')
 
 const {
     getAllTasks,
@@ -8,9 +9,9 @@ const {
     changeTaskInfo
 } = require("../controllers/dom.controller");
 
-router.get("/allTasks", getAllTasks);
-router.post("/createTask", createNewTask);
-router.delete("/deleteTask", deleteTask);
-router.patch("/updateTask", changeTaskInfo);
+router.get("/allTasks", verificationUser, getAllTasks);
+router.post("/createTask", verificationUser, createNewTask);
+router.delete("/deleteTask", verificationUser, deleteTask);
+router.patch("/updateTask", verificationUser, changeTaskInfo);
 
 module.exports = router;
