@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const verificationUser = require('../../middleware/verification')
+const verificationUser = require('../../middleware/verification');
 
 const {
-    getAllTasks,
-    createNewTask,
-    deleteTask,
-    changeTaskInfo
+	getAllTasks,
+	createNewTask,
+	deleteTask,
+	changeTaskInfo
 } = require("../controllers/dom.controller");
 
 router.get("/allTasks", verificationUser, getAllTasks);
