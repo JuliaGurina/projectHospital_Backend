@@ -36,17 +36,22 @@ module.exports.createNewTask = (req, res) => {
 };
 
 module.exports.deleteTask = (req, res) => {
-	Task.deleteOne(req.query).then((result) => {
-		Task.find().then((result) => {
+	const { _id } = req.query
+	Task.deleteOne({ _id }).then(() => {
+		Task.find({
+			userId: req.user.userId
+		}).then((result) => {
 			res.send({ data: result });
 		});
 	});
 };
 
 module.exports.changeTaskInfo = (req, res) => {
-	const { _id } = req.body;
-	Task.updateOne({ _id }, req.body).then((result) => {
-		Task.find().then((result) => {
+	const { _id } = req.query
+	Task.updateOne({ _id }, req.body).then(() => {
+		Task.find({
+			userId: req.user.userId
+		}).then((result) => {
 			res.send({ data: result });
 		});
 	});
